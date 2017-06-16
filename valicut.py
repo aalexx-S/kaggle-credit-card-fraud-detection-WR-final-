@@ -1,7 +1,7 @@
 # This file is named by Louis Tsai
 import random
 
-def valicut(vali_ratio, X, y):
+def valicut(X, y, vali_ratio):
     size = int(y.count(1) * vali_ratio)
     ind = [i for i in range(len(y)) if y[i] == 1]
     sampled = random.sample(ind, size)
@@ -10,4 +10,4 @@ def valicut(vali_ratio, X, y):
     val_x, val_y = zip(*[(X[i], y[i]) for i in sampled])
     train_X, train_y\
         = zip(*[(X[i], y[i]) for i in range(len(y)) if i not in sampled])
-    return train_X, train_y, val_x, val_y
+    return list(train_X), list(train_y), list(val_x), list(val_y)
