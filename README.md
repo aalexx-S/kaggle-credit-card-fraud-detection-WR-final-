@@ -18,3 +18,7 @@ Or source activate.csh if you are using not bash.
 Then install the required packages.
 
     $ pip install -r requirements.txt
+
+Install imbalanced-learn:
+
+	$ package-setup.sh
