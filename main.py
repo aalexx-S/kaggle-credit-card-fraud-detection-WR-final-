@@ -5,6 +5,8 @@ import oversample
 import configparser
 import valicut
 import numpy as np
+import svm
+import validate
 
 def main(args):
     # read config
@@ -17,11 +19,13 @@ def main(args):
     if args.oversample:
         config_oversamplemode = args.oversample
     # read data
+    print('Reading data.')
     X, y = read_data.read_data(config_inputfile)
     # construct validation set
     train_X, train_y, val_X, val_y\
             = valicut.valicut(X, y, float(config['VALIDATE']['ratio']))
     # oversample
+    print('Oversampling.')
     if config_oversamplemode == 'SMOTE':
         train_X, train_y = oversample.over_sampling_SMOTE_imblearn(
                 train_X, train_y,
@@ -31,6 +35,16 @@ def main(args):
                 train_X, train_y,
                 config['OVERSAMPLE']['ratio'])
     # train
+    print('Training.')
+    classifier = None
+    if config['TRAIN']['mode'] == 'svm':
+        classifier = svm.train(train_X, train_y, config['SVM']['mode'])
+
+    # validate
+    print('Validating.')
+    result_y = classifier.predict(val_x)
+    correction = validate.correction(val_y, result_y)
+    print(correction)
 
 
 if __name__ == '__main__':
