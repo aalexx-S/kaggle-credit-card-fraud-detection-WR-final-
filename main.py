@@ -7,6 +7,7 @@ import valicut
 import numpy as np
 import svm
 import validate
+import sgd
 
 def main(args):
     # read config
@@ -39,10 +40,12 @@ def main(args):
     classifier = None
     if config['TRAIN']['mode'] == 'svm':
         classifier = svm.train(train_X, train_y, config['SVM']['mode'])
+    elif config['TRAIN']['mode'] == 'sgd':
+        classifier = sgd.train(train_X, train_y)
 
     # validate
     print('Validating.')
-    result_y = classifier.predict(val_x)
+    result_y = classifier.predict(val_X)
     correction = validate.correction(val_y, result_y)
     print(correction)
 
