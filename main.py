@@ -8,6 +8,7 @@ import numpy as np
 import svm
 import validate
 import sgd
+from ast import literal_eval
 
 def main(args):
     # read config
@@ -22,11 +23,13 @@ def main(args):
     # read data
     print('Reading data.')
     X, y = read_data.read_data(config_inputfile)
+    print('{0} data read.'.format(len(y)))
     # construct validation set
+    print('Constructing validation data.')
     train_X, train_y, val_X, val_y\
             = valicut.valicut(X, y, float(config['VALIDATE']['ratio']))
     # oversample
-    print('Oversampling.')
+    print('Oversampling, method = {0}.'.format(config_oversamplemode))
     if config_oversamplemode == 'SMOTE':
         train_X, train_y = oversample.over_sampling_SMOTE_imblearn(
                 train_X, train_y,
@@ -34,20 +37,27 @@ def main(args):
     elif config_oversamplemode == 'naive':
         train_X, train_y = oversample.over_sampling_naive(
                 train_X, train_y,
-                config['OVERSAMPLE']['ratio'])
+                float(config['OVERSAMPLE']['ratio']))
     # train
-    print('Training.')
+    print('Training, method = {0}.'.format(config['TRAIN']['mode']))
     classifier = None
     if config['TRAIN']['mode'] == 'svm':
         classifier = svm.train(train_X, train_y, config['SVM']['mode'])
     elif config['TRAIN']['mode'] == 'sgd':
-        classifier = sgd.train(train_X, train_y)
+        class_weight = config['SGD']['weight']
+        # transform from str to dict
+        if class_weight not in ['balanced', '']:
+            class_weight = literal_eval(class_weight)
+        classifier = sgd.train(train_X, train_y, class_weight,
+                int(config['SGD']['n_iter']))
 
     # validate
     print('Validating.')
     result_y = classifier.predict(val_X)
     correction = validate.correction(val_y, result_y)
-    print(correction)
+    truth_table = validate.truth_table(val_y, result_y)
+    print('Correction:{0}'.format(correction))
+    validate.print_truth_table(truth_table)
 
 
 if __name__ == '__main__':
