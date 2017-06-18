@@ -15,11 +15,11 @@ def main(args):
     config = configparser.ConfigParser()
     config.read('config.ini')
     config_inputfile = config['GENERAL']['inputfile']
-    config_oversamplemode = config['OVERSAMPLE']['mode']
+    config_oversample_method = config['OVERSAMPLE']['method']
     if args.input:
         config_inputfile = args.input
     if args.oversample:
-        config_oversamplemode = args.oversample
+        config_oversample_method = args.oversample
     # read data
     print('Reading data.')
     X, y = read_data.read_data(config_inputfile)
@@ -29,21 +29,21 @@ def main(args):
     train_X, train_y, val_X, val_y\
             = valicut.valicut(X, y, float(config['VALIDATE']['ratio']))
     # oversample
-    print('Oversampling, method = {0}.'.format(config_oversamplemode))
-    if config_oversamplemode == 'SMOTE':
+    print('Oversampling, method = {0}.'.format(config_oversample_method))
+    if config_oversample_method == 'SMOTE':
         train_X, train_y = oversample.over_sampling_SMOTE_imblearn(
                 train_X, train_y,
                 config['OVERSAMPLE']['kind'])
-    elif config_oversamplemode == 'naive':
+    elif config_oversample_method == 'naive':
         train_X, train_y = oversample.over_sampling_naive(
                 train_X, train_y,
                 float(config['OVERSAMPLE']['ratio']))
     # train
-    print('Training, method = {0}.'.format(config['TRAIN']['mode']))
+    print('Training, method = {0}.'.format(config['TRAIN']['method']))
     classifier = None
-    if config['TRAIN']['mode'] == 'svm':
-        classifier = svm.train(train_X, train_y, config['SVM']['mode'])
-    elif config['TRAIN']['mode'] == 'sgd':
+    if config['TRAIN']['method'] == 'svm':
+        classifier = svm.train(train_X, train_y, config['SVM']['method'])
+    elif config['TRAIN']['method'] == 'sgd':
         class_weight = config['SGD']['weight']
         # transform from str to dict
         if class_weight not in ['balanced', '']:
