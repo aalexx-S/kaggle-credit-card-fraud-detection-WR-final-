@@ -5,9 +5,8 @@ import sampler
 import configparser
 import valicut
 import numpy as np
-import svm
 import validate
-import sgd
+import classifier
 from ast import literal_eval
 
 def main(args):
@@ -35,21 +34,12 @@ def main(args):
     train_X, train_y = smp.fit_sample(train_X, train_y)
     print('data size: {0}.'.format(len(train_y)))
     # train
-    print('Training, method = {0}.'.format(config.get('TRAIN', 'method')))
-    classifier = None
-    if config.get('TRAIN', 'method') == 'svm':
-        classifier = svm.train(train_X, train_y, config.get('SVM', 'method'))
-    elif config.get('TRAIN', 'method') == 'sgd':
-        class_weight = config.get('SGD', 'weight')
-        # transform from str to dict
-        if class_weight not in ['balanced', '']:
-            class_weight = literal_eval(class_weight)
-        classifier = sgd.train(train_X, train_y, class_weight,
-                int(config.get('SGD', 'n_iter')))
-
+    print('Training, method = {0}.'.format(config.get('CLASSIFIER', 'method')))
+    clf = classifier.Clf(config)
+    clf.fit(train_X, train_y)
     # validate
     print('Validating.')
-    result_y = classifier.predict(val_X)
+    result_y = clf.predict(val_X)
     correction = validate.correction(val_y, result_y)
     truth_table = validate.truth_table(val_y, result_y)
     print('Correction:{0}'.format(correction))

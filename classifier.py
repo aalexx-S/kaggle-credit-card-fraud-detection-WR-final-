@@ -1,0 +1,32 @@
+from ast import literal_eval
+import Classifier
+
+class Clf:
+    config = None
+    classifier = None
+
+    def __init__(self, config):
+        self.config = self._Parameters(config)
+        if self.config.classifier_method == 'svc':
+            self.classifier = Classifier.SVC(config)
+        elif self.config.classifier_method == 'sgd':
+            self.classifier = Classifier.SGD(config)
+
+    def fit(self, X, y):
+        self.classifier.fit(X, y)
+
+    def predict(self, X):
+        return self.classifier.predict(X)
+
+
+    class _Parameters:
+        classifier_method = ''
+        allowed = []
+        kwargs = dict()
+
+        def __init__(self, config):
+            self.classifier_method = config.get('CLASSIFIER', 'method')
+            self.allowed = literal_eval(config.get('CLASSIFIER', 'allowed'))
+            if self.classifier_method not in self.allowed:
+                raise ValueError('Classifier method not allowed by'
+                    + ' config.CLASSIFIER.allowed.')

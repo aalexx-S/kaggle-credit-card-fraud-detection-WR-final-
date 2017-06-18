@@ -36,3 +36,9 @@ Use 'get' method provided by configparser instead of directly field access so th
 All Sampler implementation should be placed in Sampler and should inherit BaseSampler.
 The name of the sampler should be added to SAMPLER.allowed in config.ini, and the corresponding strategy should be added to sampler.py.
 The name of the file should be added to \_\_init\_\_.py in Sampler.
+
+## Adding Classifier
+
+All classifier implementation should be placed in Classifier and shoud inherit BaseClassifier.
+The name of the classifier should be added to CLASSIFIER.allowed in config.ini, and the corresponding stategy should be added to classifier.py.
+The name of the file should be added to \_\_init\_\_.py in Classifier.
