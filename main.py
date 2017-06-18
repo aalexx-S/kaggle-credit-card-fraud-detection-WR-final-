@@ -1,7 +1,7 @@
 import read_data
 import argparse
 import sys
-import oversample
+import sampler
 import configparser
 import valicut
 import numpy as np
@@ -15,11 +15,12 @@ def main(args):
     config = configparser.ConfigParser()
     config.read('config.ini')
     config_inputfile = config.get('GENERAL', 'inputfile')
-    config_oversample_method = config.get('OVERSAMPLE', 'method')
+    config_sample_method = config.get('SAMPLER', 'method')
     if args.input:
         config_inputfile = args.input
-    if args.oversample:
-        config_oversample_method = args.oversample
+    if args.sample:
+        config_sample_method = args.sample
+        config.set('SAMPLER', 'method', config_sample_method)
     # read data
     print('Reading data.')
     X, y = read_data.read_data(config_inputfile)
@@ -28,16 +29,11 @@ def main(args):
     print('Constructing validation data.')
     train_X, train_y, val_X, val_y\
             = valicut.valicut(X, y, float(config.get('VALIDATE', 'ratio')))
-    # oversample
-    print('Oversampling, method = {0}.'.format(config_oversample_method))
-    if config_oversample_method == 'SMOTE':
-        train_X, train_y = oversample.over_sampling_SMOTE_imblearn(
-                train_X, train_y,
-                config.get('OVERSAMPLE', 'kind'))
-    elif config_oversample_method == 'naive':
-        train_X, train_y = oversample.over_sampling_naive(
-                train_X, train_y,
-                float(config.get('OVERSAMPLE', 'ratio')))
+    # sample
+    print('Sampling, method = {0}.'.format(config_sample_method))
+    smp = sampler.Smp(config)
+    train_X, train_y = smp.fit_sample(train_X, train_y)
+    print('data size: {0}.'.format(len(train_y)))
     # train
     print('Training, method = {0}.'.format(config.get('TRAIN', 'method')))
     classifier = None
@@ -63,6 +59,6 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='WR final program.')
     parser.add_argument('-input')
-    parser.add_argument('-oversample')
+    parser.add_argument('-sample')
     args = parser.parse_args()
     main(args)
