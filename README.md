@@ -42,3 +42,7 @@ The name of the file should be added to \_\_init\_\_.py in Sampler.
 All classifier implementation should be placed in Classifier and shoud inherit BaseClassifier.
 The name of the classifier should be added to CLASSIFIER.allowed in config.ini, and the corresponding stategy should be added to classifier.py.
 The name of the file should be added to \_\_init\_\_.py in Classifier.
+
+## Adding utilities
+
+All utility files should be placed in Utils. The name of the methods should be added to \_\_init\_\_.py.

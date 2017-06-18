@@ -1,35 +1,28 @@
-import read_data
+"""
+2017 web retrieval final project.
+See https://github.com/aalexx-S/WR-final
+"""
 import argparse
 import sys
-import sampler
-import configparser
-import valicut
+import Utils
 import numpy as np
-import validate
-import classifier
 from ast import literal_eval
 
-def main(args):
-    # read config
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    config_inputfile = config.get('GENERAL', 'inputfile')
-    config_sample_method = config.get('SAMPLER', 'method')
-    if args.input:
-        config_inputfile = args.input
-    if args.sample:
-        config_sample_method = args.sample
-        config.set('SAMPLER', 'method', config_sample_method)
+import sampler
+import configparser
+import classifier
+
+def main(config):
     # read data
     print('Reading data.')
-    X, y = read_data.read_data(config_inputfile)
+    X, y = Utils.read_data(config.get('GENERAL', 'inputfile'))
     print('{0} data read.'.format(len(y)))
     # construct validation set
     print('Constructing validation data.')
     train_X, train_y, val_X, val_y\
-            = valicut.valicut(X, y, float(config.get('VALIDATE', 'ratio')))
+            = Utils.valicut(X, y, float(config.get('VALIDATE', 'ratio')))
     # sample
-    print('Sampling, method = {0}.'.format(config_sample_method))
+    print('Sampling, method = {0}.'.format(config.get('SAMPLER', 'method')))
     smp = sampler.Smp(config)
     train_X, train_y = smp.fit_sample(train_X, train_y)
     print('data size: {0}.'.format(len(train_y)))
@@ -40,15 +33,25 @@ def main(args):
     # validate
     print('Validating.')
     result_y = clf.predict(val_X)
-    correction = validate.correction(val_y, result_y)
-    truth_table = validate.truth_table(val_y, result_y)
+    correction = Utils.correction(val_y, result_y)
+    truth_table = Utils.truth_table(val_y, result_y)
     print('Correction:{0}'.format(correction))
-    validate.print_truth_table(truth_table)
+    Utils.print_truth_table(truth_table)
 
 
 if __name__ == '__main__':
+    # parse arguments
     parser = argparse.ArgumentParser(description='WR final program.')
     parser.add_argument('-input')
     parser.add_argument('-sample')
     args = parser.parse_args()
-    main(args)
+    # read config
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    config_inputfile = config.get('GENERAL', 'inputfile')
+    config_sample_method = config.get('SAMPLER', 'method')
+    if args.input:
+        config.set('GENERAL', 'inputfile', args.input)
+    if args.sample:
+        config.set('SAMPLER', 'method', args.sample)
+    main(config)
