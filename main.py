@@ -7,6 +7,7 @@ import sys
 import Utils
 import numpy as np
 from ast import literal_eval
+from sklearn.preprocessing import StandardScaler
 
 import sampler
 import configparser
@@ -21,6 +22,11 @@ def main(config):
     print('Constructing validation data.')
     train_X, train_y, val_X, val_y\
             = Utils.valicut(X, y, float(config.get('VALIDATE', 'ratio')))
+    # standardization
+    print('Standardizing.')
+    scaler = StandardScaler().fit(train_X)
+    train_X = scaler.transform(train_X)
+    val_X = scaler.transform(val_X)
     # sample
     print('Sampling, method = {0}.'.format(config.get('SAMPLER', 'method')))
     smp = sampler.Smp(config)
