@@ -22,6 +22,16 @@ def main(config):
     print('Constructing validation data.')
     train_X, train_y, val_X, val_y\
             = Utils.valicut(X, y, float(config.get('VALIDATE', 'ratio')))
+    # feature select
+    selector = Utils.get_feature_selector(config)
+    if selector:
+        selector.fit(train_X, train_y)
+        before_trans_0 = train_X[0]
+        train_X = selector.transform(train_X)
+        val_X = selector.transform(val_X)
+        print('pvalues:' + str(selector.pvalues_))
+        print('{0} features left: {1}'.format(len(train_X[0]),
+                            Utils.get_index(before_trans_0, train_X[0])))
     # standardization
     print('Standardizing.')
     scaler = StandardScaler().fit(train_X)
