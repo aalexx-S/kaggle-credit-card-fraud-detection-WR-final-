@@ -11,6 +11,8 @@ class Smp:
             self.sampler = Sampler.SMOTEImlearn(config)
         elif self.config.oversample_method == 'naive':
             self.sampler = Sampler.Naive(config)
+        elif self.config.oversample_method == 'ADASYN':
+            self.sampler = Sampler.ADASYNImlearn(config)
 
     def fit_sample(self, X, y):
         return self.sampler.fit_sample(X, y)
