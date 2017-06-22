@@ -16,7 +16,7 @@ class RandomForest(BaseClassifier):
 
     def predict(self, X):
         return self.clf.predict(X)
-    
+
 
     class _Parameters:
         con_sec = 'RANDOM FOREST'
