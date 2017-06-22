@@ -1,5 +1,6 @@
 from .baseSampler import BaseSampler
 import random
+import numpy as np
 from collections import defaultdict
 
 class Naive(BaseSampler):
@@ -29,8 +30,8 @@ class Naive(BaseSampler):
         tmp = [random.choice(pool) for i in range(size)]
         reX = X.copy()
         rey = y.copy()
-        reX.extend(tmp)
-        rey.extend([label]*size)
+        np.append(reX, tmp)
+        np.append(rey, [label]*size)
         return reX, rey
 
 
