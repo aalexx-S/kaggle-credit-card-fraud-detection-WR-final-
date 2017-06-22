@@ -13,6 +13,8 @@ class Clf:
             self.classifier = Classifier.SGD(config)
         elif self.config.classifier_method == 'random forest':
             self.classifier = Classifier.RandomForest(config)
+        elif self.config.classifier_method == 'logistic regression':
+            self.classifier = Classifier.LogisticRegression(config)
 
     def fit(self, X, y):
         self.classifier.fit(X, y)
