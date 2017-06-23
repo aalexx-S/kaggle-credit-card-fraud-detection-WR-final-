@@ -27,7 +27,15 @@ def f1_score(table):
     FP = table[1]
     FN = table[10]
     TN = table[0]
-    Precision = TP / (TP+FP)
-    Recall = TP / (TP+FN)
+    
+    if ((TP+FP) == 0):
+        Precision = 0
+    else:
+        Precision = TP / (TP+FP)
+    
+    if ((TP+FN) == 0):
+        Recall = 0
+    else:
+        Recall = TP / (TP+FN)
 
     return ((2*Precision*Recall) / (Precision+Recall)), Precision, Recall
