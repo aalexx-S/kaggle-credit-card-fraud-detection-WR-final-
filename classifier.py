@@ -15,6 +15,8 @@ class Clf:
             self.classifier = Classifier.RandomForest(config)
         elif self.config.classifier_method == 'bagging svc':
             self.classifier = Classifier.BaggingSVC(config)
+        elif self.config.classifier_method == 'logistic regression':
+            self.classifier = Classifier.LogisticRegression(config)
 
     def fit(self, X, y):
         self.classifier.fit(X, y)
@@ -22,6 +24,8 @@ class Clf:
     def predict(self, X):
         return self.classifier.predict(X)
 
+    def setArgs(self, **kwargs):
+        self.classifier.setArgs(**kwargs)
 
     class _Parameters:
         classifier_method = ''
