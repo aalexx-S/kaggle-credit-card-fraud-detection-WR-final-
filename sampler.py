@@ -17,6 +17,8 @@ class Smp:
             self.sampler = Sampler.PySmote(config)
         elif self.config.oversample_method == 'RUS':
             self.sampler = Sampler.RUSImlearn(config)
+        elif self.config.oversample_method == 'ALLKNN':
+            self.sampler = Sampler.ALLKNNImlearn(config)
 
     def fit_sample(self, X, y):
         return self.sampler.fit_sample(X, y)
