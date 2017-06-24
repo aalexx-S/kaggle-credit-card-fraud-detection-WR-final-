@@ -22,6 +22,8 @@ class Clf:
     def predict(self, X):
         return self.classifier.predict(X)
 
+    def setArgs(self, **kwargs):
+        self.classifier.setArgs(**kwargs)
 
     class _Parameters:
         classifier_method = ''
