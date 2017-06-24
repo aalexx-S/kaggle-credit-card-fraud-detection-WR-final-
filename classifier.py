@@ -13,6 +13,8 @@ class Clf:
             self.classifier = Classifier.SGD(config)
         elif self.config.classifier_method == 'random forest':
             self.classifier = Classifier.RandomForest(config)
+        elif self.config.classifier_method == 'bagging svc':
+            self.classifier = Classifier.BaggingSVC(config)
 
     def fit(self, X, y):
         self.classifier.fit(X, y)
