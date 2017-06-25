@@ -19,10 +19,11 @@ class Smp:
             self.sampler = Sampler.RUSImlearn(config)
         elif self.config.oversample_method == 'ALLKNN':
             self.sampler = Sampler.ALLKNNImlearn(config)
+        elif self.config.oversample_method == 'naiveUS':
+            self.sampler = Sampler.ALLKNNImlearn(config)
 
     def fit_sample(self, X, y):
         return self.sampler.fit_sample(X, y)
-
 
     class _Parameters:
         oversample_method = ''

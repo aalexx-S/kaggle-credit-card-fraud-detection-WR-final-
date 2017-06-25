@@ -8,3 +8,4 @@ from .ADASYN import ADASYNImlearn
 from .pySmote import PySmote
 from .RUS import RUSImlearn
 from .ALLKNN import ALLKNNImlearn
+from .naiveUS import NaiveUS
