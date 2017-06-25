@@ -24,6 +24,15 @@ def main(config):
     train_X, train_y, val_X, val_y\
             = Utils.valicut(X, y, float(config.get('VALIDATE', 'ratio')))
 
+    # standardization
+    Utils.verbose_print('Standardizing.')
+    scaler = StandardScaler().fit(train_X)
+    train_X = scaler.transform(train_X)
+    val_X = scaler.transform(val_X)
+    # store smount information cosrcla
+    train_X_amount = [[i[-1]] for i in train_X]
+    val_X_amount = [[i[-1]] for i in val_X]
+
     # feature select
     selector = Utils.get_feature_selector(config)
     if selector:
@@ -34,21 +43,27 @@ def main(config):
         Utils.verbose_print('pvalues:' + str(selector.pvalues_))
         Utils.verbose_print('{0} features left: {1}'.format(len(train_X[0]),
                             Utils.get_index(before_trans_0, train_X[0])))
-    # standardization
-    Utils.verbose_print('Standardizing.')
-    scaler = StandardScaler().fit(train_X)
-    train_X = scaler.transform(train_X)
-    val_X = scaler.transform(val_X)
 
     # sample
     Utils.verbose_print('Sampling, method = {0}.'.format(config.get('SAMPLER', 'method')))
+    # merge amount back to train_X for costcla
+    if config.get('CLASSIFIER', 'method') == 'costcla':
+        train_X = [np.append(i, j) for i, j in zip(train_X, train_X_amount)]
     smp = sampler.Smp(config)
     train_X, train_y = smp.fit_sample(train_X, train_y)
     Utils.verbose_print('data size: {0}.'.format(len(train_y)))
+    # remove amount from train_X, and revert amount to original value
+    if config.get('CLASSIFIER', 'method') == 'costcla':
+        train_X_amount = [i[-1] for i in train_X]
+        train_X = np.array([i[:-1] for i in train_X])
+        train_X_amount =[[i * scaler.scale_[-1] + scaler.mean_[-1]]\
+                                        for i in train_X_amount]
 
     # train
     Utils.verbose_print('Training, method = {0}.'.format(config.get('CLASSIFIER', 'method')))
     clf = classifier.Clf(config)
+    if config.get('CLASSIFIER', 'method') == 'costcla':
+        clf.setArgs(train_X_amount=train_X_amount)
     clf.fit(train_X, train_y)
 
     # validate

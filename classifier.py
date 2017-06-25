@@ -17,6 +17,8 @@ class Clf:
             self.classifier = Classifier.BaggingSVC(config)
         elif self.config.classifier_method == 'logistic regression':
             self.classifier = Classifier.LogisticRegression(config)
+        elif self.config.classifier_method == 'costcla':
+            self.classifier = Classifier.Costcla(config)
 
     def fit(self, X, y):
         self.classifier.fit(X, y)
@@ -38,3 +40,4 @@ class Clf:
             if self.classifier_method not in self.allowed:
                 raise ValueError('Classifier method not allowed by'
                     + ' config.CLASSIFIER.allowed.')
+

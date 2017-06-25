@@ -16,9 +16,10 @@ def get_feature_selector(config):
 
 def get_index(source, target):
     re = []
+    sl = source.tolist()
     for i in target:
         try:
-            re.append(source.index(i))
+            re.append(sl.index(i))
         except ValueError:
             re.append('X')
     return re
