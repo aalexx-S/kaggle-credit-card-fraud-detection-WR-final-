@@ -1,8 +1,9 @@
 from numpy.random import choice
+from numpy import array
 
 from .baseSampler import BaseSampler
 
-def NaiveUS(BaseSampler):
+class NaiveUS(BaseSampler):
     """NaiveUS: naive under sampler
     """
     def __init__(self, config):
@@ -13,4 +14,4 @@ def NaiveUS(BaseSampler):
         if size == 0:
             size = 1
         index = choice(range(len(X)), size, False)
-        return X[index], y[index]
+        return array(X)[index], array(y)[index]

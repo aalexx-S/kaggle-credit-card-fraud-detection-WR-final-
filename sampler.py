@@ -2,8 +2,6 @@ import Sampler
 from ast import literal_eval
 
 class Smp:
-    config = None
-    sampler = None
 
     def __init__(self, config):
         self.config = self._Parameters(config)
@@ -20,7 +18,7 @@ class Smp:
         elif self.config.oversample_method == 'ALLKNN':
             self.sampler = Sampler.ALLKNNImlearn(config)
         elif self.config.oversample_method == 'naiveUS':
-            self.sampler = Sampler.ALLKNNImlearn(config)
+            self.sampler = Sampler.NaiveUS(config)
         elif self.config.oversample_method == 'NearMiss':
             self.sampler = Sampler.NearMissImlearn(config)
 
