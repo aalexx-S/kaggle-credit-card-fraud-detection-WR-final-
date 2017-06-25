@@ -21,6 +21,8 @@ class Smp:
             self.sampler = Sampler.ALLKNNImlearn(config)
         elif self.config.oversample_method == 'naiveUS':
             self.sampler = Sampler.ALLKNNImlearn(config)
+        elif self.config.oversample_method == 'NearMiss':
+            self.sampler = Sampler.NearMissImlearn(config)
 
     def fit_sample(self, X, y):
         return self.sampler.fit_sample(X, y)

@@ -1,5 +1,5 @@
 __all__ = ['baseSampler', 'SMOTE_imlearn', 'naive', 'ADASYN', 'pySmote',\
-        'RUS', 'ALLKNN']
+        'RUS', 'ALLKNN', 'naiveUS', 'NearMiss']
 
 from .baseSampler import BaseSampler
 from .SMOTE_imlearn import SMOTEImlearn
@@ -9,3 +9,4 @@ from .pySmote import PySmote
 from .RUS import RUSImlearn
 from .ALLKNN import ALLKNNImlearn
 from .naiveUS import NaiveUS
+from .NearMiss import NearMissImlearn
