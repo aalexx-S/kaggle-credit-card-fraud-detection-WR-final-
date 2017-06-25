@@ -14,6 +14,8 @@ import configparser
 import classifier
 
 def main(config):
+    if config.get('GENERAL', 'verbose'):
+        Utils.set_verbose()
     # read data
     Utils.verbose_print('Reading data.')
     X, y = Utils.read_data(config.get('GENERAL', 'inputfile'))
