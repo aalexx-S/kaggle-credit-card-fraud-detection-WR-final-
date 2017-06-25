@@ -30,7 +30,7 @@ def main():
     config = configparser.ConfigParser()
     config.read('config.ini')
     config_inputfile = config.get('GENERAL', 'inputfile')
-    config_sample_method = config.get('SAMPLER', 'method')
+    config_sample_method = config.get('CLASSIFIER', 'method')
 
     correctness = []
     f1 = []
@@ -43,27 +43,27 @@ def main():
 
     print("start testing with method {0}.".format(config_sample_method))
     with PrintMagic() as pm:
-        for i in range(10):
-            mainprog(config)
+        for i in range(1):
+            s = mainprog(config)
             #eprint(pm.buffer)
 
             # parse lines
             l = pm.buffer
-            correctness.append(float(l[10].split(':')[1]))
-            f1.append(float(l[12].split(':')[1]))
-            precision.append(float(l[13].split(':')[1]))
-            recall.append(float(l[14].split(':')[1]))
-            amc.append(float(l[15].split(':')[1]))
+            correctness.append(s[0])
+            f1.append(s[1])
+            precision.append(s[2])
+            recall.append(s[3])
+            amc.append(s[4])
 
             pm.buffer = [] # clear buffer
             eprint('Iteration {0}'.format(i+1))
 
     # output result
-    print('correctness: ' + np.mean(correctness))
-    print('fl score: ' + np.mean(fl))
-    print('precision: ' + np.mean(precision))
-    print('recall: ' + np.mean(recall))
-    print('amount cost: ' + np.mean(amc))
+    print('correctness:', sum(correctness) / float(len(correctness)))
+    print('fl score:', sum(f1) / float(len(f1)))
+    print('precision:', sum(precision) / float(len(precision)))
+    print('recall:', sum(recall) / float(len(recall)))
+    print('amount cost:', sum(amc) / float(len(amc)))
 
 if __name__ == '__main__':
     main()

@@ -68,6 +68,8 @@ def main(config):
     Utils.verbose_print('Recall:{0}'.format(Recall))
     Utils.verbose_print('Amount sensitive cost:{0}'.format(amount_cost))
 
+    return correction, f1_score, Precision, Recall, amount_cost
+
 
 if __name__ == '__main__':
     # parse arguments
