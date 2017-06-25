@@ -28,11 +28,8 @@ class Naive(BaseSampler):
         pool = [X[i] for i in range(len(y)) if y[i] == label]
         size = int(len(pool) * (self.config.ratio-1))
         tmp = [random.choice(pool) for i in range(size)]
-        reX = X.copy()
-        rey = y.copy()
-        np.append(reX, tmp)
-        np.append(rey, [label]*size)
-        return reX, rey
+        return np.concatenate((X.copy(), tmp)),\
+                    np.concatenate((y.copy(), [label]*size))
 
 
     class _Parameters:
