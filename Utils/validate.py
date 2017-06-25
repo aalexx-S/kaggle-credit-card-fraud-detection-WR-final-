@@ -42,3 +42,19 @@ def f1_score(table):
     else:
         F1_score = (2*Precision*Recall) / (Precision+Recall)
     return F1_score, Precision, Recall
+
+def cost_matrix(val_X_amount):
+    re = []
+    const = 1
+    for i in val_X_amount:
+         # cost_mat[C_FP,C_FN,C_TP,C_TN]
+         re.append([const, i, const, 0])
+    return re
+
+def EDCS_cost(ans, pred, val_X_amount):
+    cm = cost_matrix(val_X_amount)
+    cv = {1:0, 10:1, 11:2, 0:3}
+    re = 0
+    for i, j, c in zip(ans, pred, cm):
+        re += c[cv[10 * i + j]]
+    return re

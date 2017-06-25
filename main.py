@@ -23,6 +23,7 @@ def main(config):
     Utils.verbose_print('Constructing validation data.')
     train_X, train_y, val_X, val_y\
             = Utils.valicut(X, y, float(config.get('VALIDATE', 'ratio')))
+    val_X_amount = [i[-1] for i in val_X]
 
     # feature select
     selector = Utils.get_feature_selector(config)
@@ -56,12 +57,14 @@ def main(config):
     result_y = clf.predict(val_X)
     correction = Utils.correction(val_y, result_y)
     truth_table = Utils.truth_table(val_y, result_y)
+    amount_cost = Utils.EDCS_cost(val_y, result_y, val_X_amount)
     print('Correction:{0}'.format(correction))
     Utils.verbose_print(Utils.print_truth_table(truth_table))
     f1_score, Precision, Recall = Utils.f1_score(truth_table)
     Utils.verbose_print('F1 Score:{0}'.format(f1_score))
     Utils.verbose_print('Precision:{0}'.format(Precision))
     Utils.verbose_print('Recall:{0}'.format(Recall))
+    Utils.verbose_print('Amount sensitive cost:{0}'.format(amount_cost))
 
 
 if __name__ == '__main__':
